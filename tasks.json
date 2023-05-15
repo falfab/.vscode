@@ -1,0 +1,47 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "mkdir_build",
+      "type": "shell",
+      "command": "mkdir -p build"
+    },
+    {
+      "label": "cmake",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceRoot}/build"
+      },
+      "command": "cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBUILD_TESTS=ON -DBUILD_PYBIND=ON ${workspaceRoot}",
+      "dependsOn": ["mkdir_build"]
+    },
+    {
+      "label": "make",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceRoot}/build"
+      },
+      "command": "make -j8",
+      "dependsOn": ["cmake"]
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceRoot}/build"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn": ["make"]
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "rm -rf ${workspaceRoot}/build"
+    }
+  ]
+}
